@@ -1,0 +1,67 @@
+import os
+import shutil
+import argparse
+
+def organize_files(source_dir, destination_dir):
+    try:
+        # Create the destination directory if it doesn't exist
+        if not os.path.exists(destination_dir):
+            os.makedirs(destination_dir)
+
+        # Loop through files in the source directory
+        for filename in os.listdir(source_dir):
+            source_path = os.path.join(source_dir, filename)
+            if os.path.isfile(source_path):
+                # Get the file extension
+                _, file_extension = os.path.splitext(filename)
+                file_extension = file_extension.lower()  # Convert to lowercase
+
+                # Create a subdirectory in the destination directory for the file type
+                destination_subdir = os.path.join(destination_dir, file_extension[1:])  # Remove leading period
+                if not os.path.exists(destination_subdir):
+                    os.makedirs(destination_subdir)
+
+                # Move the file to the corresponding subdirectory
+                destination_path = os.path.join(destination_subdir, filename)
+                shutil.move(source_path, destination_path)
+                print(f'Moved: {filename} -> {destination_path}')
+
+        print('Organizing completed successfully!')
+    except Exception as e:
+        print(f'Error: {e}')
+
+def main():
+    parser = argparse.ArgumentParser(description='File Organizer')
+    parser.add_argument('source_dir', help='Source directory containing files to organize')
+    parser.add_argument('destination_dir', help='Destination directory for organized files')
+    args = parser.parse_args()
+
+    source_dir = args.source_dir
+    destination_dir = args.destination_dir
+
+    if not os.path.exists(source_dir):
+        print(f'Source directory "{source_dir}" does not exist.')
+        return
+
+    organize_files(source_dir, destination_dir)
+
+if __name__ == '__main__':
+    main()
+
+
+
+
+
+
+
+
+
+
+# In this detailed script: #
+
+# 1. The script creates the destination directory and subdirectories based on file extensions. #
+# 2. It loops through the files in the source directory, identifies their file extensions, and moves them to the appropriate subdirectories in the destination directory. #
+# 3. Error handling is implemented to catch any exceptions that may occur during the organization process. #
+# 4. User-friendly messages are provided to indicate the progress and status of the organization process. #
+
+# To use this script, save it to a .py file, and you can run it from the command line with the source and destination directory paths as arguments. (Example: python organize_files.py /path/to/source_directory /path/to/destination_directory) #
